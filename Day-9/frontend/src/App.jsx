@@ -6,7 +6,7 @@ const App = () => {
   console.log("rendering...");
 
   function fetchNotes() {
-    axios.get("http://localhost:3000/api/notes").then((res) => {
+    axios.get("https://backend-1-bvw2.onrender.com/api/notes").then((res) => {
       setNote(res.data.notes);
     });
   }
@@ -21,7 +21,7 @@ const App = () => {
     // console.log(title.value,discription.value);
 
     axios
-      .post("http://localhost:3000/api/notes", {
+      .post("https://backend-1-bvw2.onrender.com/api/notes", {
         title: title.value,
         discription: discription.value,
       })
@@ -33,7 +33,7 @@ const App = () => {
 
   function deleteHandeler(noteId) {
     console.log(noteId);
-    axios.delete("http://localhost:3000/api/notes/" + noteId).then((res) => {
+    axios.delete("https://backend-1-bvw2.onrender.com/api/notes/" + noteId).then((res) => {
       console.log(res.data);
       fetchNotes();
     });
@@ -45,7 +45,7 @@ const App = () => {
 
   if (!newTitle || !newDiscription) return;
 
-    axios.patch("http://localhost:3000/api/notes/"+noteId,{
+    axios.patch("https://backend-1-bvw2.onrender.com/api/notes/"+noteId,{
     title:newTitle,
     discription:newDiscription
     })
