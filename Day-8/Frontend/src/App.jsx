@@ -65,7 +65,8 @@ const App = () => {
 
   // DELETE
   function deleteHandeler(noteId) {
-    axios.delete("https://backend-1-bvw2.onrender.com/notes/" + noteId).then(() => {
+    axios.delete("https://backend-1-bvw2.onrender.com/api/notes/" + noteId)
+    .then(() => {
       fetchNote();
     });
   }
