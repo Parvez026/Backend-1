@@ -12,7 +12,7 @@ const App = () => {
 
   // GET
   function fetchNote() {
-    axios.get("http://localhost:3000/api/notes").then((res) => {
+    axios.get("https://backend-1-bvw2.onrender.com/api/notes").then((res) => {
       setNote(res.data.notes);
     });
   }
@@ -26,11 +26,12 @@ const App = () => {
     e.preventDefault();
 
     const { title, discription } = e.target.elements;
+    
 
     // Agar editId hai to UPDATE hoga
     if (editId) {
       axios
-        .patch("http://localhost:3000/api/notes/" + editId, {
+        .patch("https://backend-1-bvw2.onrender.com/api/notes/" + editId, {
           title: title.value,
           discription: discription.value,
         })
@@ -50,7 +51,7 @@ const App = () => {
 
     // Agar editId nahi hai to CREATE hoga
     axios
-      .post("http://localhost:3000/api/notes", {
+      .post("https://backend-1-bvw2.onrender.com/api/notes", {
         title: title.value,
         discription: discription.value,
       })
@@ -64,7 +65,7 @@ const App = () => {
 
   // DELETE
   function deleteHandeler(noteId) {
-    axios.delete("http://localhost:3000/api/notes/" + noteId).then(() => {
+    axios.delete("https://backend-1-bvw2.onrender.com/notes/" + noteId).then(() => {
       fetchNote();
     });
   }

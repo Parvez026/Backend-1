@@ -5,6 +5,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cors())
+app.use(express.static('./public'))
 //POST
 app.post("/api/notes", async (req, res) => {
   const { title, discription } = req.body;
