@@ -2,6 +2,7 @@ const postModel = require("../models/post.model");
 const ImageKit = require("@imagekit/nodejs");
 const { toFile } = require("@imagekit/nodejs");
 const likeModel = require("../models/like.model");
+const { get } = require("../routes/post.routes");
 
 const imagekit = new ImageKit({
   privateKey: process.env.IMAGEKIT_PRIVATE_KEY,
@@ -71,39 +72,60 @@ async function getPostDetailController(req, res) {
 
 async function likePostController(req, res) {
   const postId = req.params.postId;
-  const username=req.user.username
+  const username = req.user.username;
 
-  const post=await postModel.findById(postId)
+  const post = await postModel.findById(postId);
 
-  if(!post){
+  if (!post) {
     return res.status(404).json({
-        message:"Post is not found"
-    })
+      message: "Post is not found",
+    });
   }
-//   const isAlreadyLike=await likeModel.findOne({
-//     post:postId,
-//     user:username
-//   })
-//   if(isAlreadyLike){
-//     return res.status(409).json({
-//         message:`You are already like ${username}`
-//     })
-//   }
+  //   const isAlreadyLike=await likeModel.findOne({
+  //     post:postId,
+  //     user:username
+  //   })
+  //   if(isAlreadyLike){
+  //     return res.status(409).json({
+  //         message:`You are already like ${username}`
+  //     })
+  //   }
 
-  const like=await likeModel.create({
-    post:postId,
-    user:username
-  })
+  const like = await likeModel.create({
+    post: postId,
+    user: username,
+  });
 
   res.status(201).json({
-    message:"Post like successfully",
-    like
-  })
-
+    message: "Post like successfully",
+    like,
+  });
 }
+
+async function getFeedController(req, res) {
+  const user = req.user;
+  const posts = await Promise.all(
+    (await postModel.find().populate("user").lean())
+    .map(async (post) => {
+      const isLiked = await likeModel.findOne({
+        user: user.username,
+        post: post._id,
+      });
+      post.isLiked = Boolean(isLiked);
+      return post;
+    }),
+  );
+
+  res.status(200).json({
+    message: "Posts fetched successfully",
+    posts,
+  });
+}
+
 module.exports = {
   createPostController,
   fetchPostController,
   getPostDetailController,
-  likePostController
+  likePostController,
+  getFeedController,
 };

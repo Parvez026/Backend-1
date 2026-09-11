@@ -1,17 +1,19 @@
-import { RouterProvider } from "react-router"
-import { router } from "./app.routes"
-import "./features/shared/globle.scss"
-import { AuthProvider } from "./features/auth/auth.context"
+import { RouterProvider } from "react-router";
+import { router } from "./app.routes";
+import "./features/shared/globle.scss";
+import { AuthProvider } from "./features/auth/auth.context";
+import { PostProvider } from "./features/post/post.context";
+
 function App() {
-
-
   return (
     <>
-   <AuthProvider>
-     <RouterProvider router={router}/>
-   </AuthProvider>
+      <AuthProvider>
+        <PostProvider>
+          <RouterProvider router={router} />
+        </PostProvider>
+      </AuthProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
