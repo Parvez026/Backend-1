@@ -1,0 +1,16 @@
+.button {
+  border: none;
+  outline: none;
+  padding-inline: 1rem;
+  padding-block: 0.7rem;
+  border-radius: 0.8rem;
+
+  &.form-btn{
+    background-color: rgba(250, 36, 36, 0.946);
+    color: whitesmoke;
+    transition: all 0.3s ease-in-out;
+  }
+  &:active{
+    transform: scale(0.95);
+  }
+}
