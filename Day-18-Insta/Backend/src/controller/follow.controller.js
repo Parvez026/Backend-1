@@ -91,8 +91,35 @@ async function updateFollowController(req, res) {
     follow: followRequest,
   });
 }
+
+async function getFollowersController(req, res) {
+  const username = req.params.username;
+
+  const followers = await followModel.find({
+    followee: username,
+  });
+
+  return res.status(200).json({
+    followers: followers.map((item) => item.follower),
+  });
+}
+
+async function getFollowingController(req, res) {
+  const username = req.params.username;
+
+  const following = await followModel.find({
+    follower: username,
+  });
+
+  return res.status(200).json({
+    following: following.map((item) => item.followee),
+  });
+}
+
 module.exports = {
   followUserController,
   unfollowUsercontroller,
   updateFollowController,
+  getFollowersController,
+  getFollowingController
 };

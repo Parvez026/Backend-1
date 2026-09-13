@@ -16,4 +16,13 @@ followRouter.post("/unfollow/:username",identifyUser,followController.unfollowUs
 //UPDATE STATUS
 followRouter.patch("/follow/:followId",identifyUser,followController.updateFollowController)
 
+
+// GET /api/users/followers:username
+followRouter.get("/followers/:username",identifyUser,followController.getFollowersController
+);
+
+// GET /api/users/following:username
+followRouter.get("/following/:username",identifyUser,followController.getFollowingController
+);
+
 module.exports=followRouter

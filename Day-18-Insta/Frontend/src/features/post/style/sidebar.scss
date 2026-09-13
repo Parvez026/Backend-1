@@ -1,0 +1,38 @@
+.sideBar{
+    width: 100%;
+    max-width: 300px;
+    background: #cc5555;
+    .sidebar-container{
+        padding-inline: 1rem;
+        padding-block: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        .following{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            img{
+                width: 3rem;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                border: 1px solid white;
+                object-fit: cover;
+            }
+        }
+       .follower-container{
+        margin-top: 3rem;
+         .follower{
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            img{
+                width: 3rem;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                border: 1px solid white;
+                object-fit: cover;
+            }
+        }
+       }
+    }
+}

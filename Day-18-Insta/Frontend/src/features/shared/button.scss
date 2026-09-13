@@ -10,7 +10,13 @@
     color: whitesmoke;
     transition: all 0.3s ease-in-out;
   }
+   &.following-btn {
+  background: rgba(255, 255, 255, 0.287);
+  color: #fff;
+  border: 1px solid #dbdbdb;
+}
   &:active{
     transform: scale(0.95);
   }
+ 
 }

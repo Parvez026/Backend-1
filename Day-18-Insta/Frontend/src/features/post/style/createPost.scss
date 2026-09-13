@@ -1,0 +1,32 @@
+.create-post-page {
+  width: 100%;
+
+  .post-cantainer {
+    max-width: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .postImage-label {
+        background: rgb(240, 239, 239);
+        color: black;
+        padding-inline: 1rem;
+        padding-block: 0.4rem;
+        border-radius: 1rem;
+      }
+
+      #caption{
+        padding-inline: 1rem;
+        padding-block: 0.5rem;
+        border-radius: 1rem;
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}
