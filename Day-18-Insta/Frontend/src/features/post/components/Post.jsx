@@ -1,26 +1,46 @@
-
-
-const Post = ({post,user}) => {
+const Post = ({
+  post,
+  user,
+  handleUnLike,
+  handleLike,
+  handleFollow,
+  handleUnfollow,
+}) => {
+  console.log(user);
+  
+  
   return (
     <div className="post">
-      <div className="user">
-        <div className="img-wraper">
-          <img
-            src={user.profilePic}
-            alt=""
-          />
+      <div className="user-follow">
+        <div className="user">
+          <div className="img-wraper">
+            <img
+              src="https://imgs.search.brave.com/gwxrjv9rqgvzTAvF85esRxNsu91HX9TZuBgrDAlCVW0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9h/L2FjL0RlZmF1bHRf/cGZwLmpwZz91dG1f/c291cmNlPWNvbW1v/bnMud2lraW1lZGlh/Lm9yZyZ1dG1fY2Ft/cGFpZ249aW5kZXgm/dXRtX2NvbnRlbnQ9/dGh1bWJuYWlsX3Vu/c2NhbGVkJl89MjAy/MDA0MTgwOTIxMDY"
+              alt=""
+            />
+          </div>
+          <p>{user.username}</p>
         </div>
-        <p>{user.username}</p>
+        <button
+           className={`button form-btn ${post.isFollow ? "following-btn" : ""}`}
+          onClick={() => {
+            post.isFollow
+              ? handleUnfollow(post.user.username)
+              : handleFollow(post.user.username);
+          }}
+        >
+          {post.isFollow ? "Following" : "Follow"}
+        </button>
       </div>
-      <img
-        src={post.image_url}
-        alt=""
-      />
+      <img src={post.image_url} alt="" />
       <div className="icons">
         <div className="left">
           <button>
             <svg
-            className={post.isLiked?"like":""}
+              className={post.isLiked ? "like" : ""}
+              onClick={() => {
+                post.isLiked ? handleUnLike(post._id) : handleLike(post._id);
+              }}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="currentColor"
