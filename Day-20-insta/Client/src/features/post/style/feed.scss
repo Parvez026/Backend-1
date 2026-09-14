@@ -1,0 +1,71 @@
+.feed-page{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+    .feed{
+        max-width: 300px;
+        width: 100%;
+        .posts{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            .post{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                background: rgb(83, 40, 9);
+                padding-inline: 1rem;
+                padding-block: 0.7rem;
+                .user{
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    .img-wraper{
+                        border-radius: 50%;
+                        border: 2.5px solid rgba(255, 0, 0, 0);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: conic-gradient(from 90deg,rgb(211, 39, 39),rgb(182, 33, 182),rgb(206, 91, 29));
+                        img{
+                            width: 3rem;
+                            aspect-ratio: 1/1;
+                            border-radius: 50%;
+                            object-fit: cover;
+                        }
+                    }
+                }
+                img{
+                    width: 100%;
+                }
+                .icons{
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                   .left{
+                   display: flex;
+                   gap: 0.4rem;
+                   }
+                   button{
+                    background-color: transparent;
+                    outline: none;
+                    border: none;
+                    color: white;
+                   }
+                   .like{
+                    color: red;
+                   }
+                   svg{
+                    width: 1.5rem;
+                    aspect-ratio: 1/1;
+                   }
+                }
+            }
+        }
+    }
+}
