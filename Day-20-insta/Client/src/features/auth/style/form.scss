@@ -1,0 +1,34 @@
+main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .form-container {
+    width: 100%;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    background-color: black;
+    padding: 3rem;
+    border-radius: 1rem;
+    form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      input {
+        border: none;
+        outline: none;
+        padding-inline: 1rem;
+        padding-block: 0.7rem;
+        border-radius: 1rem;
+      }
+    }
+    a {
+      text-decoration: none;
+      color: rgb(236, 75, 75);
+    }
+  }
+}
