@@ -13,10 +13,12 @@ app.use(cors({
 
 //require router
 const authRouter=require("./routes/auth.routes")
+const songRouter=require("./routes/song.routes")
 
 
 //use router
 app.use("/api/auth",authRouter)
+app.use("/api/songs",songRouter)
 
 
 
