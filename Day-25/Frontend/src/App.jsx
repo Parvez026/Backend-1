@@ -1,12 +1,17 @@
+import { RouterProvider } from "react-router"
+import { router } from "./features/App.routes"
 
+import "./features/shared/style/globle.scss"
+import { AuthContextProvider } from "./features/auth/state/auth.context"
 
-import FaceExpression from './features/expression/components/FaceExpression'
 
 function App() {
 
 
   return (
-    <FaceExpression/>
+    <AuthContextProvider>
+      <RouterProvider router={router}/>
+    </AuthContextProvider>
   )
 }
 
