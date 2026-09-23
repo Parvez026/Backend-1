@@ -2,6 +2,7 @@ import config from "../config/config.js";
 import userModel from "../models/auth.model.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import crypto from "node:crypto";
 import sessionModel from "../models/session.model.js";
 
 export async function registerUser(req, res) {
@@ -23,7 +24,7 @@ export async function registerUser(req, res) {
     password: hash,
   });
 
-  const refreshtoken = jwt.sign(
+  const refreshToken = jwt.sign(
     {
       id: user._id,
     },
@@ -31,7 +32,12 @@ export async function registerUser(req, res) {
     { expiresIn: "7d" },
   );
 
-  const refreshTokenHash = await bcrypt.hash(refreshtoken, 10);
+  // const refreshTokenHash = await bcrypt.hash(refreshtoken, 10);
+
+  const refreshTokenHash = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
   const session = await sessionModel.create({
     user: user._id,
     refreshTokenHash,
@@ -48,7 +54,7 @@ export async function registerUser(req, res) {
     { expiresIn: "15m" },
   );
 
-  res.cookie("refreshToken", refreshtoken, {
+  res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: true,
     sameSite: "strict",
@@ -98,20 +104,26 @@ export async function refreshToken(req, res) {
 
   let decoded = jwt.verify(refreshToken, config.JWT_SECRET);
 
-  // const user=await userModel.findById(decoded.id)
 
-  const refereshTokenHash = await bcrypt.hash(refreshToken, 10);
+  const refreshTokenHash = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
 
-  const session = await sessionModel.findOne({
-    refreshTokenHash,
-    revoked: false,
-  });
+    const session = await sessionModel.findOne({
+      user: decoded.id,
+      refreshTokenHash,
+      revoked: false,
+    });
+
 
   if (!session) {
     return res.status(401).json({
       message: "Invalid refresh token",
     });
   }
+
+  const user=await userModel.findById(session.user)
 
   const accesstoken = jwt.sign(
     {
@@ -128,7 +140,6 @@ export async function refreshToken(req, res) {
 }
 
 export async function logoutUser(req, res) {
-    
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     return res.status(401).json({
@@ -136,10 +147,16 @@ export async function logoutUser(req, res) {
     });
   }
 
-  const refereshTokenHash = await bcrypt.hash(refreshToken, 10);
+  const decoded = jwt.verify(refreshToken, config.JWT_SECRET);
+
+
+  const refreshTokenHash = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
 
   const session = await sessionModel.findOne({
-    refereshTokenHash,
+    refreshTokenHash,
     revoked: false,
   });
 
