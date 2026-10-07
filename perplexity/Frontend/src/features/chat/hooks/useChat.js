@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   addNewMessage,
   setChats,
@@ -14,9 +15,13 @@ import { useDispatch } from "react-redux";
 
 export const useChat = () => {
   const dispatch = useDispatch();
+  const abortControllerRef = useRef(null);
 
   async function handelSendMessage({ message, chatId }) {
     dispatch(setLoading(true));
+
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     let currentChatId = chatId;
 
@@ -24,6 +29,7 @@ export const useChat = () => {
       await sendMessage({
         message,
         chatId,
+        signal: controller.signal,
         onChat: ({ chatId: newChatId, title }) => {
           currentChatId = newChatId;
 
@@ -70,9 +76,14 @@ export const useChat = () => {
         },
       });
     } catch (error) {
-      console.log("SEND MESSAGE ERROR:", error);
+      if (error.name === "AbortError") {
+        console.log("AI generation stopped");
+      } else {
+        console.log("SEND MESSAGE ERROR:", error);
+      }
     } finally {
       dispatch(setLoading(false));
+      abortControllerRef.current = null;
     }
   }
 
@@ -131,6 +142,10 @@ export const useChat = () => {
     dispatch(setCurrentChatId(null));
   }
 
+  function handleStop() {
+    abortControllerRef.current?.abort();
+  }
+
   return {
     initializeSocketConnection,
     handelSendMessage,
@@ -138,5 +153,6 @@ export const useChat = () => {
     handleGetMessages,
     handleOpenChat,
     handleNewChat,
+    handleStop,
   };
 };

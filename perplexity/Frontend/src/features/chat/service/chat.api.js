@@ -5,7 +5,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const sendMessage = async ({message,chatId,onChat,onChunk,}) => {
+export const sendMessage = async ({message,chatId,onChat,onChunk,signal}) => {
 
   const response = await fetch("http://localhost:3000/api/chats/message",
     {
@@ -18,6 +18,7 @@ export const sendMessage = async ({message,chatId,onChat,onChunk,}) => {
         message,
         chat: chatId,
       }),
+      signal
     }
   );
 
