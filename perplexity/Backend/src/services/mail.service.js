@@ -12,14 +12,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-transporter
-  .verify()
-  .then(() => {
-    console.log("Ready for send emails");
-  })
-  .catch((err) => {
-    console.log("Error occurred while verifying transporter:", err);
-  });
+// transporter
+//   .verify()
+//   .then(() => {
+//     console.log("Ready for send emails");
+//   })
+//   .catch((err) => {
+//     console.log("Error occurred while verifying transporter:", err);
+//   });
 
 export async function sendEmail({ to, subject, html, text }) {
   const mailOptions = {
