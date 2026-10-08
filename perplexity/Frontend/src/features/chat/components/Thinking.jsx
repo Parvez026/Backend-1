@@ -3,7 +3,7 @@ import React from 'react'
 const Thinking = () => {
   return (
      <div className="flex items-center gap-1 text-white/60">
-      <span>Thinking</span>
+      <span>AI is Thinking</span>
 
       <span className="flex gap-1">
         <span className="animate-bounce [animation-delay:0ms]">.</span>

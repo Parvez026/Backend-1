@@ -10,7 +10,7 @@ const AsideBar = ({ chats, currentChatId }) => {
   };
   return (
     <aside className="hidden border border-white/30 rounded-3xl p-4 md:flex md:flex-col">
-      <h1 className="text-3xl font-semibold">Perplexity</h1>
+      <h1 className="text-3xl font-semibold">ZentraAI</h1>
       <div className="border-b pb-2 border-b-white/40">
         <button
           onClick={() => chat.handleNewChat()}
