@@ -1,24 +1,32 @@
 import React from "react";
 import { useChat } from "../hooks/useChat";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Settings } from "lucide-react";
+import Profile from "./Profile";
 
-const AsideBar = ({ chats, currentChatId }) => {
+const AsideBar = ({ chats, currentChatId,  onOpenSettings }) => {
   const chat = useChat();
 
   const openChat = (chatId) => {
     chat.handleOpenChat(chatId, chats);
   };
   return (
-    <aside className="hidden border border-white/30 rounded-3xl p-4 md:flex md:flex-col">
-      <h1 className="text-3xl font-semibold">ZentraAI</h1>
-      <div className="border-b pb-2 border-b-white/40">
+    <aside className="hidden border border-white/30 rounded-3xl md:flex md:flex-col bg-[#13141a]">
+      <h1 className="text-3xl font-semibold px-3">ZentraAI</h1>
+      <div className=" pb-2 px-2">
         <button
           onClick={() => chat.handleNewChat()}
-          className="mt-4 w-fit rounded-xl border border-white/40 px-2 py-1.5 text-left hover:bg-white/10"
+          className="mt-4 w-fit rounded-xl border border-white/40 px-2 py-1.5 text-left hover:bg-white/10 cursor-pointer"
         >
           + New Chat
         </button>
       </div>
+      <button 
+      onClick={onOpenSettings}
+      className="w-full px-3 py-2 flex items-center gap-2 text-left rounded-xl text-white/80 transition hover:bg-white/10 hover:text-white"
+      >
+        <Settings size={20}/>
+        <span>Setting</span>
+      </button>
       <div className="flex flex-col mt-4">
         {Object.values(chats).map((chat) => (
           <button
@@ -39,6 +47,7 @@ const AsideBar = ({ chats, currentChatId }) => {
           </button>
         ))}
       </div>
+      <Profile/>
     </aside>
   );
 };

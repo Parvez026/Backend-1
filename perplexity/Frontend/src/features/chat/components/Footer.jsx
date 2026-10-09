@@ -18,7 +18,7 @@ const Footer = ({ currentChatId }) => {
     setChatInput("");
   }
   return (
-    <footer className="shrink-0 w-full border rounded-full border-white/60 bg-mist-800 p-4 md:py-4 md:px-5">
+    <footer className="shrink-0 w-full border rounded-full border-white/60 bg-mist-900 p-4 md:py-4 md:px-5">
       <form
         onSubmit={handelSubmit}
         className="flex flex-col gap-3 px-2 md:flex-row"
