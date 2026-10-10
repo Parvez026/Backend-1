@@ -18,7 +18,7 @@ const Profile = () => {
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex w-full items-center gap-3 rounded-2xl text-left hover:bg-white/10 p-2"
+        className="flex w-full items-center gap-3 rounded-2xl rounded-t-none text-left cursor-pointer hover:bg-white/10 p-2"
       >
         <div className="h-10 w-10 rounded-full bg-violet-600 flex items-center justify-center font-semibold">
           {initial}
@@ -44,7 +44,7 @@ const Profile = () => {
                 logout();
                 setIsOpen(false);
               }}
-              className="flex items-center gap-3 w-full rounded-lg mt-2 px-3 py-2.5 text-sm text-red-400 transition hover:bg-red-500/10"
+              className="flex items-center gap-3 w-full rounded-lg mt-2 px-3 py-2.5 text-sm text-red-400 cursor-pointer transition hover:bg-red-500/10"
             >
               <LogOut size={18} />
               Logout

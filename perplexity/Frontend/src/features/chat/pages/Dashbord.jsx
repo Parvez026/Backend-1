@@ -10,7 +10,6 @@ import AsideBar from "../components/AsideBar";
 import Thinking from "../components/Thinking";
 import Settings from "../components/Settings";
 
-
 const Dashbord = () => {
   const chat = useChat();
   const [showSetting, setShowSetting] = useState(false);
@@ -44,14 +43,26 @@ const Dashbord = () => {
         />
 
         {showSetting ? (
-        <Settings onBack={()=>setShowSetting(false)}/>
+          <Settings onBack={() => setShowSetting(false)} />
         ) : (
           <section
             className={`relative mx-auto w-3/5 h-full min-h-0 flex flex-col min-w-0`}
           >
             {/* ===Message=== */}
 
-            <div className="messages flex-1 min-h-0 space-y-3 overflow-y-auto pr-1">
+            <div className="messages relative flex-1 min-h-0 space-y-3 overflow-y-auto pr-1">
+             
+              {!isMessage && (
+                <div className="pointer-events-none absolute inset-x-0 top-[35%] flex flex-col items-center px-4 text-center">
+                  <h1 className="text-3xl font-semibold">
+                    What can I help you with?
+                  </h1>
+                  <p className="mt-3 text-sm text-white/50">
+                    Ask anything, explore ideas, or build something new.
+                  </p>
+                </div>
+              )}
+              
               {chats[currentChatId]?.messages.map((message) => (
                 <div
                   key={message._id}
@@ -130,7 +141,7 @@ const Dashbord = () => {
             {/* ====FOOTER===== */}
 
             <div
-              className={`w-full transition-all duration-700 ease-in-out ${
+              className={`w-full ${
                 isMessage ? "mt-auto" : "absolute top-1/2 -translate-y-1/2"
               }`}
             >
