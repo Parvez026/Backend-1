@@ -8,8 +8,14 @@ import {
   addMessage,
   appendMessage,
   createNewChat,
+  setDeleteChat,
 } from "../chat.slice";
-import { getChat, getMessage, sendMessage } from "../service/chat.api";
+import {
+  getChat,
+  getMessage,
+  sendMessage,
+  deleteChat,
+} from "../service/chat.api";
 import { initializeSocketConnection } from "../service/chat.socket";
 import { useDispatch } from "react-redux";
 
@@ -146,6 +152,16 @@ export const useChat = () => {
     abortControllerRef.current?.abort();
   }
 
+  async function handleDeleteChat(chatId) {
+    try {
+      await deleteChat(chatId);
+      dispatch(setDeleteChat(chatId));
+      console.log("Chat deleted successfully");
+    } catch (error) {
+      console.log("DELETE CHAT ERROR:", error);
+    }
+  }
+
   return {
     initializeSocketConnection,
     handelSendMessage,
@@ -154,5 +170,6 @@ export const useChat = () => {
     handleOpenChat,
     handleNewChat,
     handleStop,
+    handleDeleteChat,
   };
 };
