@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
 import chatRouter from "./routes/chat.routes.js";
+import documentRoutes from "./routes/document.routes.js";
 import morgan from "morgan";
 import cors from "cors";
 
@@ -21,5 +22,6 @@ app.use(
 
 app.use("/api/auth", authRouter);
 app.use("/api/chats",chatRouter)
+app.use("/api/documents", documentRoutes);
 
 export default app;

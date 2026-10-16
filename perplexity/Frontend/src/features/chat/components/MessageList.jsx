@@ -1,22 +1,13 @@
-
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import Thinking from "./Thinking";
-import WelcomeScreen from "./WelcomeScreen";
 
-
-const MessageList = ({
-  messages,
-  isLoading,
-  messageEndRef,
-}) => {
-    const isMessage=messages.length>0
+const MessageList = ({ messages, isLoading, messageEndRef }) => {
   return (
     <div className="messages relative flex-1 min-h-0 space-y-3 overflow-y-auto px-6 py-5">
-        {!isMessage&&<WelcomeScreen/>}
       {messages.map((message) => (
         <div
           key={message._id}
@@ -80,7 +71,7 @@ const MessageList = ({
 
       {isLoading && (
         <div className="mr-auto px-4 py-3 text-sm text-white/60">
-          <Thinking/>
+          <Thinking />
         </div>
       )}
 

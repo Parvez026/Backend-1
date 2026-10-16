@@ -14,7 +14,7 @@ const Dashbord = () => {
   const currentChatId = useSelector((state) => state.chat.currentChatId);
   const isLoading = useSelector((state) => state.chat.isLoading);
   const messages = chats[currentChatId]?.messages || [];
-  const isMessage=messages.length>0
+  const isMessage = messages.length > 0;
   const messageEndRef = useRef(null);
 
   useEffect(() => {
@@ -55,10 +55,13 @@ const Dashbord = () => {
             {/* ====FOOTER===== */}
 
             <div
-              className={`w-full ${
+              className={`w-full mb-4 ${
                 isMessage ? "mt-auto" : "absolute top-1/2 -translate-y-1/2"
               }`}
             >
+               <p className="mb-3 text-center text-xs text-white/40">
+                ZentraAI can make mistakes. Check important information.
+              </p>
               <Footer currentChatId={currentChatId} />
             </div>
           </section>
