@@ -8,13 +8,13 @@ import {
   ColumnsIcon,
   RowsIcon,
 } from "../components/Icons";
-import { SAMPLE_BATTLE } from "../data/sampleBattle";
+// import { SAMPLE_BATTLE } from "../data/sampleBattle";
 import axios from "axios";
 
 const DEFAULT_API_URL = "http://localhost:3000/invoke";
 
 export default function App() {
-  const [history, setHistory] = useState([SAMPLE_BATTLE]);
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [layout, setLayout] = useState("split");
   const [apiUrl, setApiUrl] = useState(DEFAULT_API_URL);
@@ -70,9 +70,7 @@ export default function App() {
         prompt: result.problem || prompt.trim(),
       };
 
-      setHistory((previousHistory) => [...previousHistory, battle]);
-
-      setHistory((previousHistory) => [...previousHistory, battle]);
+      setHistory((previous) => [...previous, battle]);
     } catch (err) {
       console.error("API request failed:", err.response?.data || err.message);
 
@@ -189,15 +187,6 @@ export default function App() {
 
       {/* Conversation */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-12 pt-12 pb-52 space-y-20">
-        {/* {history.map((turn, index) => (
-          <BattleMessage
-            key={index}
-            turn={turn}
-            index={index}
-            layout={layout}
-          />
-        ))} */}
-
         {/* API error */}
         {error && (
           <div className="rounded-xl border border-rose-500/30 bg-rose-950/30 p-4 text-sm text-rose-300">
@@ -205,6 +194,75 @@ export default function App() {
             <p>{error}</p>
           </div>
         )}
+       
+        {/* Display all battle results */}
+        {history.map((turn, index) => (
+          <div key={index} className="space-y-6">
+            {/* Question */}
+            <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
+              <p className="text-sm text-indigo-400 mb-2">Question</p>
+              <h2 className="text-lg font-semibold text-white">
+                {turn.problem || turn.prompt}
+              </h2>
+            </div>
+
+            {/* Both AI solutions */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
+                <h3 className="text-indigo-400 font-semibold mb-4">
+                  Solution 1
+                </h3>
+                <div className="whitespace-pre-wrap break-words text-sm leading-7 text-slate-200">
+                  {turn.solution_1}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-slate-900/60 p-6">
+                <h3 className="text-purple-400 font-semibold mb-4">
+                  Solution 2
+                </h3>
+                <div className="whitespace-pre-wrap break-words text-sm leading-7 text-slate-200">
+                  {turn.solution_2}
+                </div>
+              </div>
+            </div>
+
+            {/* Judge evaluation */}
+            {turn.judge && (
+              <div className="rounded-2xl border border-emerald-500/20 bg-slate-900/60 p-6">
+                <h3 className="text-emerald-400 text-lg font-semibold mb-5">
+                  Judge Evaluation
+                </h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <p className="text-sm text-slate-400 mb-2">
+                      Solution 1 Score
+                    </p>
+                    <p className="text-2xl font-bold text-white">
+                      {turn.judge.solution_1_score}/10
+                    </p>
+                    <p className="mt-3 text-sm text-slate-300 whitespace-pre-wrap">
+                      {turn.judge.solution_1_reasoning}
+                    </p>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-slate-400 mb-2">
+                      Solution 2 Score
+                    </p>
+                    <p className="text-2xl font-bold text-white">
+                      {turn.judge.solution_2_score}/10
+                    </p>
+                    <p className="mt-3 text-sm text-slate-300 whitespace-pre-wrap">
+                      {turn.judge.solution_2_reasoning}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
 
         {/* Loading skeleton */}
         {loading && (
@@ -228,7 +286,6 @@ export default function App() {
             </div>
           </div>
         )}
-
         <div ref={bottomRef} />
       </main>
 
