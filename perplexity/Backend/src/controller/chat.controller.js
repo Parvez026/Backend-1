@@ -39,10 +39,9 @@ export async function sendMessage(req, res) {
     res.setHeader("Chat-Title", title);
   }
 
-
   let fullResponse = "";
 
-  for await (const chunk of generateResponse(messages)) {
+  for await (const chunk of generateResponse(messages, req.user.id)) {
     fullResponse += chunk;
     res.write(chunk);
   }

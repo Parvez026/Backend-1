@@ -229,37 +229,7 @@ export default function App() {
 
             {/* Judge evaluation */}
             {turn.judge && (
-              <div className="rounded-2xl border border-emerald-500/20 bg-slate-900/60 p-6">
-                <h3 className="text-emerald-400 text-lg font-semibold mb-5">
-                  Judge Evaluation
-                </h3>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <p className="text-sm text-slate-400 mb-2">
-                      Solution 1 Score
-                    </p>
-                    <p className="text-2xl font-bold text-white">
-                      {turn.judge.solution_1_score}/10
-                    </p>
-                    <p className="mt-3 text-sm text-slate-300 whitespace-pre-wrap">
-                      {turn.judge.solution_1_reasoning}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-slate-400 mb-2">
-                      Solution 2 Score
-                    </p>
-                    <p className="text-2xl font-bold text-white">
-                      {turn.judge.solution_2_score}/10
-                    </p>
-                    <p className="mt-3 text-sm text-slate-300 whitespace-pre-wrap">
-                      {turn.judge.solution_2_reasoning}
-                    </p>
-                  </div>
-                </div>
-              </div>
+             <JudgePanel judge={turn.judge}/>
             )}
           </div>
         ))}

@@ -1,4 +1,3 @@
-
 import { PineconeStore } from "@langchain/pinecone";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { MistralAIEmbeddings } from "@langchain/mistralai";
@@ -8,22 +7,18 @@ const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY,
 });
 
-const pineconeIndex = pinecone.Index(
-  process.env.PINECONE_INDEX_NAME,
-);
+const pineconeIndex = pinecone.Index(process.env.PINECONE_INDEX_NAME);
 
 const embeddings = new MistralAIEmbeddings({
   model: "mistral-embed",
   apiKey: process.env.MISTRAL_API_KEY,
 });
 
-const vectorStore =await PineconeStore.fromExistingIndex(embeddings, {
+const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
   pineconeIndex,
 });
 
-
 export { vectorStore };
-
 
 export async function storePdfChunks(text, metadata = {}) {
   const chunks = await splitTextIntoChunks(text);
@@ -42,4 +37,26 @@ export async function storePdfChunks(text, metadata = {}) {
   return {
     totalChunks: documents.length,
   };
+}
+
+export async function searchPdfChunks(query, userId) {
+  console.log("PDF search query:", query);
+  console.log("Searching for userId:", String(userId));
+
+const results = await vectorStore.similaritySearch(
+  query,
+  3,
+  {
+    userId: String(userId),
+  },
+);
+
+
+  console.log("Retrieved PDF chunks:", results.length);
+  console.log(
+    "Retrieved content:",
+    results.map((doc) => doc.pageContent),
+  );
+
+  return results;
 }

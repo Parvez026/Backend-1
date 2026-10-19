@@ -9,6 +9,7 @@ import {
 } from "langchain";
 import * as z from "zod";
 import { searchInternet } from "./internet.service.js";
+import { searchPdfChunks } from "./rag.service.js";
 
 const geminiModel = new ChatGoogleGenerativeAI({
   model: "gemini-3.5-flash-lite",
@@ -35,20 +36,47 @@ const agent = createAgent({
   tools: [searchInternetTool],
 });
 
-export async function* generateResponse(messages) {
+export async function* generateResponse(messages, userId) {
+  const lastUserMessage = [...messages]
+    .reverse()
+    .find((msg) => msg.role === "user");
+
+  let pdfContext = "";
+
+  if (lastUserMessage) {
+    try {
+      const chunks = await searchPdfChunks(lastUserMessage.content, userId);
+
+      pdfContext = chunks.map((chunk) => chunk.pageContent).join("\n\n");
+    } catch (error) {
+      console.error("PDF search error:", error);
+    }
+  }
+
+  const inputMessages = messages
+    .map((msg) => {
+      if (msg.role === "user") {
+        return new HumanMessage(msg.content);
+      } else if (msg.role === "ai") {
+        return new AIMessage(msg.content);
+      }
+    })
+    .filter(Boolean);
+
+  if (pdfContext) {
+    inputMessages.unshift(
+      new SystemMessage(
+        `Use the following PDF context when relevant to answer the user's question. If the answer is not present in the context, say so rather than inventing facts.
+
+PDF context:
+${pdfContext}`,
+      ),
+    );
+  }
+
   const stream = await agent.stream(
-    {
-      messages: messages.map((msg) => {
-        if (msg.role === "user") {
-          return new HumanMessage(msg.content);
-        } else if (msg.role === "ai") {
-          return new AIMessage(msg.content);
-        }
-      }),
-    },
-    {
-      streamMode: "messages",
-    },
+    { messages: inputMessages },
+    { streamMode: "messages" },
   );
 
   for await (const [message] of stream) {
@@ -84,3 +112,4 @@ Rules:
 
   return response.text;
 }
+
