@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useChat } from "../hooks/useChat";
 import { useSelector } from "react-redux";
@@ -9,6 +8,7 @@ const Footer = ({ currentChatId }) => {
   const [chatInput, setChatInput] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadedPdf, setUploadedPdf] = useState(null);
+  const [documentId, setDocumentId] = useState(null);
   const fileInputRef = useRef(null);
 
   const isLoading = useSelector((state) => state.chat.isLoading);
@@ -17,7 +17,7 @@ const Footer = ({ currentChatId }) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+    if (!file.name.toLowerCase().endsWith(".pdf")) {
       alert("Please select a PDF file.");
       e.target.value = "";
       return;
@@ -36,47 +36,39 @@ const Footer = ({ currentChatId }) => {
       );
 
       setUploadedPdf(file.name);
-      alert(`${file.name} uploaded successfully!`);
-      console.log("PDF upload response:", response.data);
+      alert("PDF uploaded successfully!");
+      console.log(response.data);
+      setDocumentId(response.data.documentId);
     } catch (error) {
-      console.error("PDF upload error:", error);
-      alert(
-        error.response?.data?.message ||
-          error.response?.data?.err ||
-          "PDF upload failed.",
-      );
+      alert(error.response?.data?.message || "PDF upload failed.");
     } finally {
       setIsUploading(false);
       e.target.value = "";
     }
   }
 
-  function handelSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
-    const trimMessage = chatInput.trim();
-    if (!trimMessage) return;
+    const message = chatInput.trim();
+    if (!message || isLoading) return;
 
     chat.handelSendMessage({
-      message: trimMessage,
+      message,
       chatId: currentChatId,
+      documentId: documentId,
     });
 
     setChatInput("");
   }
 
   return (
-    <footer className="shrink-0 w-full max-w-[750px] mx-auto border rounded-3xl border-white/60 bg-mist-900 p-4 md:py-4 md:px-5">
+    <footer className="shrink-0 w-full max-w-[750px] mx-auto border rounded-3xl border-white/60 bg-mist-900 p-4">
       {uploadedPdf && (
-        <div className="mb-3 text-sm text-white/80">
-          📄 Attached PDF: {uploadedPdf}
-        </div>
+        <div className="mb-3 text-sm text-white/80">📄 {uploadedPdf}</div>
       )}
 
-      <form
-        onSubmit={handelSubmit}
-        className="flex flex-col gap-3 px-2 md:flex-row md:items-center"
-      >
+      <form onSubmit={handleSubmit} className="flex items-center gap-3">
         <input
           ref={fileInputRef}
           type="file"
@@ -89,31 +81,33 @@ const Footer = ({ currentChatId }) => {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="px-3 border border-white/50 rounded-2xl text-white disabled:opacity-50"
+          className="px-3 py-2 border border-white/50 rounded-xl text-white disabled:opacity-50"
+          title="Upload PDF"
         >
-          {isUploading ? "Uploading..." : "📎"}
+          {isUploading ? "..." : "📎"}
         </button>
 
         <input
           value={chatInput}
           onChange={(e) => setChatInput(e.target.value)}
-          className="w-full min-w-0 border-none outline-none bg-transparent text-white placeholder:text-white"
+          className="flex-1 min-w-0 bg-transparent text-white outline-none"
           type="text"
-          placeholder="Ask about your PDF..."
+          placeholder="Ask anything..."
         />
 
         {isLoading ? (
           <button
-            className="px-3 py-2 border border-white/50 rounded-2xl text-white"
             type="button"
             onClick={() => chat.handleStop()}
+            className="px-3 py-1 border border-white/50 rounded-xl text-white"
           >
             Stop
           </button>
         ) : (
           <button
-            className="px-3 py-2 border border-white/50 rounded-2xl text-white"
             type="submit"
+            disabled={!chatInput.trim()}
+            className="px-3 py-1 border border-white/50 rounded-xl text-white disabled:opacity-50"
           >
             Send
           </button>

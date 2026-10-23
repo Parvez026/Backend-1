@@ -36,7 +36,7 @@ const agent = createAgent({
   tools: [searchInternetTool],
 });
 
-export async function* generateResponse(messages, userId) {
+export async function* generateResponse(messages, userId, documentId) {
   const lastUserMessage = [...messages]
     .reverse()
     .find((msg) => msg.role === "user");
@@ -45,9 +45,16 @@ export async function* generateResponse(messages, userId) {
 
   if (lastUserMessage) {
     try {
-      const chunks = await searchPdfChunks(lastUserMessage.content, userId);
+      const chunks = await searchPdfChunks(
+        lastUserMessage.content,
+        userId,
+        documentId,
+      );
 
       pdfContext = chunks.map((chunk) => chunk.pageContent).join("\n\n");
+
+      console.log("PDF context found:", pdfContext.length > 0);
+      console.log("PDF context length:", pdfContext.length);
     } catch (error) {
       console.error("PDF search error:", error);
     }
@@ -55,24 +62,22 @@ export async function* generateResponse(messages, userId) {
 
   const inputMessages = messages
     .map((msg) => {
-      if (msg.role === "user") {
-        return new HumanMessage(msg.content);
-      } else if (msg.role === "ai") {
-        return new AIMessage(msg.content);
-      }
+      if (msg.role === "user") return new HumanMessage(msg.content);
+      if (msg.role === "ai") return new AIMessage(msg.content);
+      return null;
     })
     .filter(Boolean);
 
-  if (pdfContext) {
-    inputMessages.unshift(
-      new SystemMessage(
-        `Use the following PDF context when relevant to answer the user's question. If the answer is not present in the context, say so rather than inventing facts.
+  const instructions = pdfContext
+    ? `You are ZentraAI. Answer the user's question using the uploaded PDF context whenever the question relates to it.
+Do not invent information. If the answer is not in the context, clearly say it was not found in the PDF.
+For unrelated general questions, answer normally.
 
-PDF context:
-${pdfContext}`,
-      ),
-    );
-  }
+PDF CONTEXT:
+${pdfContext}`
+    : `You are ZentraAI, a helpful assistant. Answer general questions normally. If the user asks about a PDF but no PDF context is available, explain that you could not retrieve its content.`;
+
+  inputMessages.unshift(new SystemMessage(instructions));
 
   const stream = await agent.stream(
     { messages: inputMessages },
@@ -81,7 +86,15 @@ ${pdfContext}`,
 
   for await (const [message] of stream) {
     if (message.getType() === "ai" && message.content) {
-      yield message.content;
+      if (typeof message.content === "string") {
+        yield message.content;
+      } else if (Array.isArray(message.content)) {
+        for (const part of message.content) {
+          if (part.type === "text" && part.text) {
+            yield part.text;
+          }
+        }
+      }
     }
   }
 }
@@ -112,4 +125,3 @@ Rules:
 
   return response.text;
 }
-

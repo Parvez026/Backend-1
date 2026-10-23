@@ -13,17 +13,17 @@ export async function uploadPdf(req, res) {
     }
     filePath = req.file.path;
 
-    const text=await extractPdfText(filePath)
-    const result=await storePdfChunks(text,{
-        originalName:req.file.originalname,
-         userId: req.user.id,
-    })
-
-     return res.status(201).json({
-      message: "PDF processed successfully",
-      totalChunks: result.totalChunks,
+    const text = await extractPdfText(filePath);
+    const result = await storePdfChunks(text, {
+      originalName: req.file.originalname,
+      userId: req.user.id,
     });
 
+    return res.status(201).json({
+      message: "PDF processed successfully",
+      totalChunks: result.totalChunks,
+      documentId: result.documentId,
+    });
   } catch (error) {
     console.error("PDF upload error:", error);
 

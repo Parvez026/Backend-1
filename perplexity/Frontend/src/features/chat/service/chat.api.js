@@ -5,22 +5,27 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const sendMessage = async ({message,chatId,onChat,onChunk,signal}) => {
-
-  const response = await fetch("http://localhost:3000/api/chats/message",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify({
-        message,
-        chat: chatId,
-      }),
-      signal
-    }
-  );
+export const sendMessage = async ({
+  message,
+  chatId,
+  onChat,
+  onChunk,
+  signal,
+  documentId,
+}) => {
+  const response = await fetch("http://localhost:3000/api/chats/message", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      message,
+      documentId,
+      chat: chatId,
+    }),
+    signal,
+  });
 
   if (!response.ok) {
     throw new Error("Failed to send message");
@@ -29,7 +34,6 @@ export const sendMessage = async ({message,chatId,onChat,onChunk,signal}) => {
   const newChatId = response.headers.get("Chat-Id");
   const title = response.headers.get("Chat-Title");
 
- 
   onChat({
     chatId: newChatId,
     title,
@@ -46,7 +50,6 @@ export const sendMessage = async ({message,chatId,onChat,onChunk,signal}) => {
     const chunk = decoder.decode(value, {
       stream: true,
     });
-
 
     onChunk(chunk);
   }

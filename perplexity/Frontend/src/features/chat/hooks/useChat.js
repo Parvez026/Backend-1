@@ -23,7 +23,7 @@ export const useChat = () => {
   const dispatch = useDispatch();
   const abortControllerRef = useRef(null);
 
-  async function handelSendMessage({ message, chatId }) {
+  async function handelSendMessage({ message, chatId, documentId }) {
     dispatch(setLoading(true));
 
     const controller = new AbortController();
@@ -35,6 +35,7 @@ export const useChat = () => {
       await sendMessage({
         message,
         chatId,
+        documentId,
         signal: controller.signal,
         onChat: ({ chatId: newChatId, title }) => {
           currentChatId = newChatId;
