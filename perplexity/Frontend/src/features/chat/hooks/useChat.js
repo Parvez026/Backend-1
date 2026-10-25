@@ -24,6 +24,7 @@ export const useChat = () => {
   const abortControllerRef = useRef(null);
 
   async function handelSendMessage({ message, chatId, documentId }) {
+     console.log("useChat documentId:", documentId);
     dispatch(setLoading(true));
 
     const controller = new AbortController();

@@ -21,7 +21,6 @@ const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
 
 export { vectorStore };
 
-
 export async function storePdfChunks(text, metadata = {}) {
   const chunks = await splitTextIntoChunks(text);
   const documentId = randomUUID();
@@ -47,9 +46,6 @@ export async function storePdfChunks(text, metadata = {}) {
 }
 
 
-
-
-
 export async function searchPdfChunks(query, userId, documentId) {
   console.log("PDF search query:", query);
   console.log("Searching documentId:", documentId);
@@ -59,20 +55,16 @@ export async function searchPdfChunks(query, userId, documentId) {
     return [];
   }
 
-  const results = await vectorStore.similaritySearch(query, 3, {
-    filter: {
-      documentId: { $eq: documentId },
-      userId: { $eq: String(userId) },
-    },
-  });
+ 
+const results = await vectorStore.similaritySearch(query, 3, {
+  documentId: { $eq: documentId },
+  userId: { $eq: String(userId) },
+});
+
 
   console.log("Retrieved PDF chunks:", results.length);
-  console.log(
-    "Retrieved content:",
-    results.map((doc) => doc.pageContent)
-  );
+  console.log("Retrieved content:", results.map((doc) => doc.pageContent));
 
   return results;
 }
-
 

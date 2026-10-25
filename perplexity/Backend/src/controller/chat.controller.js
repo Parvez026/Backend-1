@@ -4,7 +4,7 @@ import messageModel from "../models/message.model.js";
 
 export async function sendMessage(req, res) {
   const { message, chat: chatId, documentId } = req.body;
-
+  console.log("Received documentId:", documentId);
   let title = null;
   let chat = null;
 
@@ -41,7 +41,11 @@ export async function sendMessage(req, res) {
 
   let fullResponse = "";
 
-  for await (const chunk of generateResponse(messages, req.user.id, documentId)) {
+  for await (const chunk of generateResponse(
+    messages,
+    req.user.id,
+    documentId,
+  )) {
     fullResponse += chunk;
     res.write(chunk);
   }
