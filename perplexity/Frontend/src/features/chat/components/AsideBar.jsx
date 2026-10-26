@@ -4,20 +4,20 @@ import { MessageCircle, Settings, Sparkle, Trash2 } from "lucide-react";
 import Profile from "./Profile";
 import DeleteChatModel from "./DeleteChatModel";
 
-const AsideBar = ({ chats, currentChatId, onOpenSettings }) => {
+const AsideBar = ({ chats, currentChatId, onOpenSettings,  onClose, }) => {
   const chatAction = useChat();
   const [isDelete, setIsDelete] = useState(false);
   const [selectedChatId, setSelectedChatId] = useState(null);
   const openChat = (chatId) => {
     chatAction.handleOpenChat(chatId, chats);
+    onClose()
   };
   return (
-    <aside className="hidden w-72 shrink-0 overflow-hidden border border-white/10 rounded-3xl md:flex md:flex-col bg-[#101116] text-white shadow-2xl">
-
+    <aside className="flex h-full w-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-[#101116] text-white shadow-2xl">
       {/*=== LOGO=== */}
       <div className="flex items-center gap-3 px-5 pt-6 pb-5">
         <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-violet-500/15 text-violet-400 ring-1  ring-violet-400/20">
-          <Sparkle size={24} strokeWidth={1.8}/>
+          <Sparkle size={24} strokeWidth={1.8} />
         </div>
         <div>
           <h1 className="text-xl font-bold tracking-wide text-white">
@@ -26,7 +26,6 @@ const AsideBar = ({ chats, currentChatId, onOpenSettings }) => {
           <p className="text-xs text-white/40">Your AI workspace</p>
         </div>
       </div>
-
 
       <div className=" pb-4 px-4">
         <button
@@ -44,7 +43,7 @@ const AsideBar = ({ chats, currentChatId, onOpenSettings }) => {
         <span>Setting</span>
       </button>
 
-    {/* ====CHAT==== */}
+      {/* ====CHAT==== */}
       <div className="flex flex-col mt-4">
         {Object.values(chats).map((chat) => (
           <div

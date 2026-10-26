@@ -18,6 +18,7 @@ const chatSlice = createSlice({
         messages: [],
         lastUpdated: new Date().toISOString(),
       };
+        state.currentChatId = chatId;
     },
 
     addNewMessage: (state, action) => {
@@ -66,7 +67,7 @@ const chatSlice = createSlice({
       delete state.chats[chatId];
 
       if (state.currentChatId === chatId) {
-        state.currentChatId === null;
+        state.currentChatId = null;
       }
     },
   },

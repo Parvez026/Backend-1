@@ -12,6 +12,8 @@ export async function uploadPdf(req, res) {
       });
     }
     filePath = req.file.path;
+    const { chatId } = req.body;
+    console.log("PDF upload chatId:", chatId);
 
     const text = await extractPdfText(filePath);
     const result = await storePdfChunks(text, {
