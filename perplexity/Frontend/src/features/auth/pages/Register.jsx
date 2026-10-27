@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
+import axios from "axios";
+import { useAuth } from "../hooks/useAuth";
 
 const Register = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const { handleRegister } = useAuth();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const payload = {
@@ -14,7 +18,12 @@ const Register = () => {
       email,
       password,
     };
-    console.log(payload);
+
+    try {
+      await handleRegister(payload);
+    } catch (error) {
+      console.error("Registration failed:", error || error.message);
+    }
   };
   return (
     <div className="bg-gray-900 w-full min-h-screen text-white mx-auto flex items-center justify-center">
@@ -22,9 +31,7 @@ const Register = () => {
         <h1 className="text-cyan-600 font-bold text-2xl mb-5">Register</h1>
 
         {/* ===Register form=== */}
-        <form 
-        onSubmit={handleSubmit}
-        className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="flex flex-col">
             <label htmlFor="">Username</label>
             <input
